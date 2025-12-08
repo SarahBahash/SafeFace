@@ -26,3 +26,16 @@ SafeFace/
 
 <img width="2853" height="1417" alt="image" src="https://github.com/user-attachments/assets/08c3c243-23f8-492b-99e1-25598c9165c4" />
 <img width="2844" height="1447" alt="image" src="https://github.com/user-attachments/assets/af3fb4b4-257b-4619-b928-af87fe182b31" />
+
+
+## How to Run
+**Backend:**
+```bash
+pip install -r requirements.txt
+uvicorn app:app --reload
+API Docs:
+http://127.0.0.1:8000/docs
+
+Frontend:
+Open dashboard.html, cameras.html, or camera.html in a browser.
+
