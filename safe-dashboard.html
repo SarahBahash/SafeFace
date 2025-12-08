@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز المراقبة الأمنية - SafeFace</title>
+
+    <!-- الخط الرسمي -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- التنسيقات -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- الأيقونات الرسمية -->
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+
+<body>
+
+<!-- 🔹 الهيدر الرسمي للدولة -->
+<header class="main-header">
+    <div class="header-content">
+        <img src="logo-green.png" class="logo" alt="SafeFace Logo">
+        <div class="header-text">
+            <h1 class="system-title">SafeFace</h1>
+            <div class="system-subtitle">Eyes on Safety</div>
+        </div>
+    </div>
+</header>
+
+
+<div class="dashboard-container">
+
+    <!-- 🟩 بطاقات الإحصائيات -->
+    <div class="stats-grid">
+
+        <div class="stat-card clickable" onclick="location.href='cameras.html'">
+            <i data-feather="video" class="stat-icon"></i>
+            <div class="stat-value">24</div>
+            <div class="stat-label">كاميرات نشطة</div>
+        </div>
+
+        <div class="stat-card">
+            <i data-feather="alert-triangle" class="stat-icon"></i>
+            <div class="stat-value">7</div>
+            <div class="stat-label">تنبيهات اليوم</div>
+        </div>
+
+        <div class="stat-card">
+            <i data-feather="users" class="stat-icon"></i>
+            <div class="stat-value">142</div>
+            <div class="stat-label">الأشخاص المكتشفون</div>
+        </div>
+
+        <div class="stat-card">
+            <i data-feather="shield" class="stat-icon"></i>
+            <div class="stat-value">98%</div>
+            <div class="stat-label">درجة الأمان</div>
+        </div>
+
+    </div>
+
+    <!-- 🔸 المحتوى الرئيسي -->
+    <div class="main-content">
+
+        <!-- التنبيهات الفورية -->
+        <div class="panel">
+            <div class="panel-header">التنبيهات الفورية</div>
+
+            <div class="alert-item alert-high">
+                <div class="alert-content">
+                    <div class="alert-title"><i data-feather='alert-circle'></i> حالة توتر مرتفعة - المدخل الرئيسي</div>
+                    <div class="alert-time">منذ 3 دقائق</div>
+                </div>
+                <span class="alert-badge badge-high">عالي</span>
+            </div>
+
+            <div class="alert-item alert-medium">
+                <div class="alert-content">
+                    <div class="alert-title"><i data-feather='alert-triangle'></i> دخول غير مصرح - الطابق الثاني</div>
+                    <div class="alert-time">منذ 15 دقيقة</div>
+                </div>
+                <span class="alert-badge badge-medium">متوسط</span>
+            </div>
+
+            <div class="alert-item alert-low">
+                <div class="alert-content">
+                    <div class="alert-title"><i data-feather='check-circle'></i> فحص النظام مكتمل</div>
+                    <div class="alert-time">منذ 45 دقيقة</div>
+                </div>
+                <span class="alert-badge badge-low">منخفض</span>
+            </div>
+        </div>
+
+
+        <!-- مقياس مستوى الخطورة -->
+        <div class="panel">
+            <div class="panel-header">مستوى الخطورة</div>
+
+            <div class="risk-meter">
+                <div class="risk-circle">
+                    <div class="meter-inner">
+                        <div class="meter-value" id="riskValue">23</div>
+                        <div class="meter-label">منخفض</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-buttons">
+                <button class="btn-primary">تحديث</button>
+                <button class="btn-secondary">تصدير التقرير</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 🔵 الرسم البياني الأسبوعي -->
+    <div class="panel">
+        <div class="panel-header">إحصائيات الأسبوع</div>
+
+        <div class="chart-container">
+            <div class="chart-bar" style="height: 75%;">
+                <span class="chart-value">45</span>
+                <span class="chart-label">السبت</span>
+            </div>
+
+            <div class="chart-bar" style="height: 60%;">
+                <span class="chart-value">36</span>
+                <span class="chart-label">الأحد</span>
+            </div>
+
+            <div class="chart-bar" style="height: 90%;">
+                <span class="chart-value">54</span>
+                <span class="chart-label">الإثنين</span>
+            </div>
+
+            <div class="chart-bar" style="height: 45%;">
+                <span class="chart-value">27</span>
+                <span class="chart-label">الثلاثاء</span>
+            </div>
+
+            <div class="chart-bar" style="height: 70%;">
+                <span class="chart-value">42</span>
+                <span class="chart-label">الأربعاء</span>
+            </div>
+
+            <div class="chart-bar" style="height: 55%;">
+                <span class="chart-value">33</span>
+                <span class="chart-label">الخميس</span>
+            </div>
+
+            <div class="chart-bar" style="height: 85%;">
+                <span class="chart-value">51</span>
+                <span class="chart-label">الجمعة</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📝 سجل النشاط -->
+    <div class="panel">
+        <div class="panel-header">سجل الأنشطة</div>
+
+        <div class="activity-log">
+
+            <div class="activity-item">
+                <i data-feather="unlock" class="activity-icon"></i>
+                <div class="activity-text">فتح باب المكتب 201</div>
+                <div class="activity-time">الآن</div>
+            </div>
+
+            <div class="activity-item">
+                <i data-feather="user-check" class="activity-icon"></i>
+                <div class="activity-text">تم التعرف على موظف - أحمد محمد</div>
+                <div class="activity-time">منذ دقيقة</div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    feather.replace();
+</script>
+
+</body>
+</html>

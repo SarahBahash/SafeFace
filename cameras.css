@@ -1,0 +1,99 @@
+/* ============================
+     SafeFace Camera Grid UI
+   ============================ */
+
+body {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    background: #1d462b;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+.header {
+    background: #1d462b;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+}
+
+.header img {
+    height: 48px;
+}
+
+.header h1 {
+    font-size: 1.6em;
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Back button */
+.back-btn {
+    background: #fff;
+    border: 1px solid #CCC;
+    color: #0A6F3C;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 25px 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1em;
+}
+
+.back-btn:hover {
+    background: #EEE;
+}
+
+/* Container */
+.container {
+    width: 92%;
+    margin: auto;
+}
+
+/* Grid layout */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 20px;
+}
+
+.camera-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #DDD;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+    transition: 0.2s;
+}
+
+.camera-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.camera-preview {
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+button {
+    background: #1d462b;
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #085A32;
+}

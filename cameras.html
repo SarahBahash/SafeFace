@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>شبكة الكاميرات – SafeFace</title>
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="cameras.css">
+</head>
+
+<body>
+
+<header class="header">
+    <img src="logo-green.png" alt="SafeFace Logo">
+    <h1>شبكة الكاميرات</h1>
+</header>
+
+<div class="container">
+
+    <!-- زر رجوع يعمل صح -->
+    <button class="back-btn" onclick="location.href='safe-dashboard.html'">
+        ← رجوع
+    </button>
+
+    <div class="grid">
+
+        <!-- كاميرا 1 -->
+        <div class="camera-card">
+            <div class="camera-preview">📹</div>
+            <h3>كاميرا 1</h3>
+            <button onclick="openCamera(1)">عرض</button>
+        </div>
+
+        <!-- كاميرا 2 -->
+        <div class="camera-card">
+            <div class="camera-preview">📹</div>
+            <h3>كاميرا 2</h3>
+            <button onclick="openCamera(2)">عرض</button>
+        </div>
+
+        <!-- توليد باقي الكاميرات (3 - 16) -->
+        <!-- بدون document.write (أفضل واحترافي) -->
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const grid = document.querySelector(".grid");
+
+                for (let i = 3; i <= 10; i++) {
+                    const card = document.createElement("div");
+                    card.className = "camera-card";
+                    card.innerHTML = `
+                        <div class="camera-preview">📹</div>
+                        <h3>كاميرا ${i}</h3>
+                        <button onclick="openCamera(${i})">عرض</button>
+                    `;
+                    grid.appendChild(card);
+                }
+            });
+
+            function openCamera(id) {
+                location.href = "camera.html?cam=" + id;
+            }
+        </script>
+
+    </div>
+</div>
+
+</body>
+</html>
