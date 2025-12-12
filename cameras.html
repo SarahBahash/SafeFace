@@ -28,14 +28,16 @@
 
         <!-- كاميرا 1 -->
         <div class="camera-card">
-            <div class="camera-preview">📹</div>
-            <h3>كاميرا 1</h3>
-            <button onclick="openCamera(1)">عرض</button>
-        </div>
+             <div class="camera-preview"></div>
+  <h3>كاميرا 1</h3>
+  <button onclick="openCamera(1)">عرض</button>
+</div>
+
 
         <!-- كاميرا 2 -->
         <div class="camera-card">
-            <div class="camera-preview">📹</div>
+           <div class="camera-preview"></div>
+
             <h3>كاميرا 2</h3>
             <button onclick="openCamera(2)">عرض</button>
         </div>
@@ -50,7 +52,7 @@
                     const card = document.createElement("div");
                     card.className = "camera-card";
                     card.innerHTML = `
-                        <div class="camera-preview">📹</div>
+                         <div class="camera-preview"></div>
                         <h3>كاميرا ${i}</h3>
                         <button onclick="openCamera(${i})">عرض</button>
                     `;

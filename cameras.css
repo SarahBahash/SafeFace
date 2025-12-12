@@ -1,52 +1,55 @@
 /* ============================
-     SafeFace Camera Grid UI
+   SafeFace Camera Grid UI
+   Dark Green – Abshar Style
    ============================ */
 
 body {
     font-family: 'IBM Plex Sans Arabic', sans-serif;
-    background: #1d462b;
+    background: #0b1f17;
     margin: 0;
     padding: 0;
+    color: #e7f5ef;
 }
 
 /* Header */
 .header {
-    background: #1d462b;
+    background: #0f3d2e;
     padding: 16px 20px;
     display: flex;
     align-items: center;
     gap: 12px;
-    color: #fff;
+    border-bottom: 1px solid #1f6b52;
 }
 
 .header img {
-    height: 48px;
+    height: 46px;
 }
 
 .header h1 {
-    font-size: 1.6em;
+    font-size: 1.5em;
     margin: 0;
     font-weight: 600;
 }
 
 /* Back button */
 .back-btn {
-    background: #fff;
-    border: 1px solid #CCC;
-    color: #0A6F3C;
-    padding: 10px 18px;
-    border-radius: 6px;
+    background: transparent;
+    border: 1px solid #1f6b52;
+    color: #a7f3d0;
+    padding: 8px 16px;
+    border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    margin: 25px 0;
+    margin: 20px 0;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 1em;
+    font-size: 0.95em;
 }
 
 .back-btn:hover {
-    background: #EEE;
+    background: #1f6b52;
+    color: #fff;
 }
 
 /* Container */
@@ -55,45 +58,67 @@ body {
     margin: auto;
 }
 
-/* Grid layout */
+/* Grid */
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
     gap: 20px;
 }
 
+/* Camera Card */
 .camera-card {
-    background: white;
+    background: #061a13;
     padding: 20px;
-    border-radius: 10px;
-    border: 1px solid #DDD;
+    border-radius: 12px;
+    border: 1px solid #1f6b52;
     text-align: center;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
     transition: 0.2s;
 }
 
 .camera-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    transform: translateY(-4px);
+    border-color: #3fa07a;
 }
 
+/* Camera Icon */
 .camera-preview {
-    font-size: 45px;
+    font-size: 42px;
     margin-bottom: 10px;
 }
 
-button {
-    background: #1d462b;
+/* Camera Title */
+.camera-card h3 {
+    margin: 8px 0 12px;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+/* Button */
+.camera-card button {
+    background: #1f7a5c;
     color: #fff;
-    padding: 10px 20px;
-    margin-top: 10px;
+    padding: 9px 20px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
     transition: 0.2s;
 }
 
-button:hover {
-    background: #085A32;
+.camera-card button:hover {
+    background: #3fa07a;
+}
+
+.camera-card h3 {
+    margin: 20px 0 16px;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #e7f5ef;
+}
+.camera-preview {
+    width: 100%;
+    height: 4px;
+    background: #1f7a5c;
+    border-radius: 4px;
+    margin-bottom: 14px;
 }

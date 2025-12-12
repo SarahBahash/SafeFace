@@ -11,14 +11,15 @@ const stressBar = document.getElementById("stressBar");
 const alertBox = document.getElementById("alertBox");
 const activityLog = document.getElementById("activityLog");
 
-// قراءة رقم الكاميرا من الرابط (camera.html?cam=3)
-const params = new URLSearchParams(window.location.search);
-const camID = params.get("cam");
-if (camID) {
-  document.getElementById("camTitle").textContent = "كاميرا رقم " + camID;
-}
+let genderSpan = document.getElementById("gender");
 
+// رقم الكاميرا
+const camID = new URLSearchParams(window.location.search).get("cam");
+if (camID) document.getElementById("camTitle").textContent = "كاميرا رقم " + camID;
+
+// ----------------------------
 // تشغيل الكاميرا
+// ----------------------------
 navigator.mediaDevices.getUserMedia({ video: true })
   .then(stream => {
     video.srcObject = stream;
@@ -31,18 +32,36 @@ navigator.mediaDevices.getUserMedia({ video: true })
   .catch(err => {
     alert("تعذر تشغيل الكاميرا: " + err);
   });
+// ----------------------------
+// إعدادات الأداء
+// ----------------------------
+const CAPTURE_WIDTH = 640;
+const CAPTURE_HEIGHT = 480;
+const JPEG_QUALITY = 0.6;
+const ANALYSIS_INTERVAL = 3000;
 
-// دالة تحليل الكادر
+let noFaceCounter = 0;
+let intervalID;
+let isAnalyzing = false;
+
+// ----------------------------
+// تحليل الصورة (محسّن)
+// ----------------------------
 async function analyzeFrame() {
-  if (video.videoWidth === 0 || video.videoHeight === 0) return;
+  if (isAnalyzing || video.videoWidth === 0) return;
+  isAnalyzing = true;
 
   const ctx = canvas.getContext("2d");
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
 
+
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-  const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.8));
+  const blob = await new Promise(resolve =>
+    canvas.toBlob(resolve, "image/jpeg", JPEG_QUALITY)
+  );
+
   const formData = new FormData();
   formData.append("file", blob, "frame.jpg");
 
@@ -56,42 +75,51 @@ async function analyzeFrame() {
     });
 
     const data = await res.json();
-    console.log("API Response:", data);
-
     updateUI(data);
 
-  } catch (error) {
-    console.error("Analysis Error:", error);
+  } catch (e) {
+    console.error("API ERROR:", e);
   }
 
   analyzeBtn.textContent = "إعادة التحليل الآن";
   analyzeBtn.disabled = false;
+  isAnalyzing = false;
 }
 
-// تحديث الواجهة حسب نتيجة الذكاء الاصطناعي
+// ----------------------------
+// تحديث الواجهة
+// ----------------------------
 function updateUI(data) {
-  if (!data || data.status === "error") {
-    showAlert("لم يتم الحصول على نتيجة التحليل", "medium");
-    return;
-  }
 
   if (data.status === "no_face") {
+    noFaceCounter++;
     faceBox.style.display = "none";
-    showAlert("لا يوجد وجه في الكادر", "low");
+    showAlert("لا يوجد شخص أمام الكاميرا", "low");
+
+    if (noFaceCounter >= 3) {
+      stopAnalysis();
+      showAlert("تم إيقاف التحليل – الشخص غادر الكادر", "medium");
+    }
     return;
   }
 
-  // تحديث النصوص
+  if (noFaceCounter >= 3) {
+    showAlert("تم استئناف التحليل – تم اكتشاف شخص", "low");
+    startAutoAnalysis();
+  }
+
+  noFaceCounter = 0;
+
   neutralSpan.textContent = data.neutral;
   stressSpan.textContent = data.stress_score;
   levelSpan.textContent = data.level;
   dominantSpan.textContent = data.dominant_emotion;
 
-  // تحديث الرسم البياني
-  stressBar.style.width = `${Math.min(data.stress_score, 100)}%`;
+  if (genderSpan) {
+    genderSpan.textContent = data.gender || "—";
+  }
 
-  // تحديث المستطيل حول الوجه
-  if (data.details && data.details.region) {
+  if (data.details?.region) {
     const r = data.details.region;
     faceBox.style.display = "block";
     faceBox.style.left = r.x + "px";
@@ -102,67 +130,71 @@ function updateUI(data) {
     faceBox.style.display = "none";
   }
 
-  // تنبيه ذكي
+
+  stressBar.style.width = `${Math.min(data.stress_score, 100)}%`;
+
   showAlert(
-    data.level === "high" ? "⚠ مستوى توتر مرتفع!" :
-    data.level === "medium" ? "تنبيه: توتر متوسط" :
+    data.level === "high" ? "⚠️ مستوى توتر مرتفع جداً!" :
+    data.level === "medium" ? "تنبيه: مستوى توتر متوسط" :
     "الوضع مستقر",
     data.level
   );
 
-  // إضافة إلى سجل النشاط
-  addActivityLog(data.dominant_emotion, data.level);
+  addActivityLog(data.dominant_emotion, data.level, data.gender);
 }
 
-// تنبيه ذكي في أعلى الصفحة
-function showAlert(message, level) {
-  alertBox.style.display = "block";
-
-  alertBox.className = "alert-box " +
-    (level === "high" ? "alert-high" :
-     level === "medium" ? "alert-medium" : "alert-low");
-
-  alertBox.textContent = message;
-
-  setTimeout(() => {
-    alertBox.style.display = "none";
-  }, 4000);
+// ----------------------------
+// إيقاف / تشغيل التحليل
+// ----------------------------
+function stopAnalysis() {
+  if (intervalID) {
+    clearInterval(intervalID);
+    intervalID = null;
+  }
 }
 
-// إضافة عنصر لسجل النشاط
-function addActivityLog(emotion, level) {
+function startAutoAnalysis() {
+  if (intervalID) return;
+  analyzeFrame();
+  intervalID = setInterval(analyzeFrame, ANALYSIS_INTERVAL);
+}
+
+// ----------------------------
+// سجل النشاط
+// ----------------------------
+function addActivityLog(emotion, level, gender) {
   const item = document.createElement("div");
-  item.className = "activity-item";
-
-  const time = new Date().toLocaleTimeString("ar-SA");
+  const t = new Date().toLocaleTimeString("ar-SA");
 
   item.innerHTML = `
-    <div class="activity-text">
-      العاطفة المسيطرة: <strong>${emotion}</strong>
+    <div class="activity-item">
+      <strong>العاطفة:</strong> ${emotion} —
+      <strong>الجنس:</strong> ${gender || "—"} —
+      <strong>المستوى:</strong> ${level}
+      <div class="activity-timestamp">${t}</div>
     </div>
-    <div class="activity-timestamp">${time}</div>
   `;
 
   activityLog.prepend(item);
 
-  // الحفاظ على آخر 10 سجلات فقط
-  while (activityLog.children.length > 10) {
+  while (activityLog.children.length > 10)
     activityLog.removeChild(activityLog.lastChild);
-  }
 }
 
-// التحليل التلقائي كل 5 ثوانٍ
-function startAutoAnalysis() {
-  analyzeFrame(); // أول تحليل مباشرة
+// ----------------------------
+// التنبيهات
+// ----------------------------
+function showAlert(msg, level) {
+  alertBox.style.display = "block";
+  alertBox.className =
+    "alert-box " +
+    (level === "high" ? "alert-high" :
+     level === "medium" ? "alert-medium" :
+     "alert-low");
 
-  setInterval(() => {
-    analyzeFrame();
-  }, 5000);
+  alertBox.textContent = msg;
+  setTimeout(() => alertBox.style.display = "none", 4500);
 }
 
 // زر التحليل اليدوي
-if (analyzeBtn) {
-  analyzeBtn.addEventListener("click", analyzeFrame);
-}
-
-
+if (analyzeBtn) analyzeBtn.addEventListener("click", analyzeFrame);

@@ -2,86 +2,67 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
+  <title id="camTitle">كاميرا المراقبة</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تحليل التعابير – SafeFace</title>
 
-  <!-- الخط الرسمي -->
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet" />
-
-  <!-- التنسيقات -->
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="camera.css" />
-
-  <!-- مكتبة الأيقونات -->
-  <script src="https://unpkg.com/feather-icons"></script>
 </head>
 
 <body>
 
-  <!-- رأس الصفحة -->
-  <header class="header">
-    <h1 id="camTitle">كاميرا المراقبة</h1>
-  </header>
+<header class="header">
+  <h1 id="camTitle">كاميرا المراقبة</h1>
+</header>
+<!-- زر الرجوع -->
+<button class="back-btn" onclick="history.back()">
+  ← رجوع
+</button>
 
-  <div class="container">
+<main class="container">
 
-    <!-- زر الرجوع -->
-    <button class="back-btn" onclick="history.back()">
-      <i data-feather="arrow-right"></i> رجوع
-    </button>
-
-    <!-- صندوق الكاميرا -->
-    <div class="camera-box">
+  <!-- الكاميرا -->
+  <section class="camera-section">
+    <div class="video-wrapper">
       <video id="video" autoplay playsinline></video>
-      <canvas id="canvas" style="display:none;"></canvas>
+      <canvas id="canvas"></canvas>
 
-      <!-- مربع الوجه -->
+      <!-- إطار الوجه -->
       <div class="face-box"></div>
-
-      <!-- لوحة التحليل -->
-      <div class="analysis-panel">
-        <h3>تحليل التعابير اللحظي</h3>
-        <div class="row">
-          <span>Neutral:</span>
-          <span id="neutral">-</span>
-        </div>
-        <div class="row">
-          <span>Stress score:</span>
-          <span id="stress">-</span>
-        </div>
-        <div class="row">
-          <span>Level:</span>
-          <span id="level">-</span>
-        </div>
-        <div class="row">
-          <span>العاطفة المسيطرة:</span>
-          <span id="dominant">-</span>
-        </div>
-
-        <!-- رسم بياني صغير لمستوى التوتر -->
-        <div class="chart-wrapper">
-          <div class="chart-label">مؤشر التوتر</div>
-          <div class="chart-bar-outer">
-            <div class="chart-bar-inner" id="stressBar"></div>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- زر للتحليل اليدوي (اختياري، كل شيء أصلاً تلقائي) -->
-    <button id="analyzeBtn" class="btn-primary">
-      <i data-feather="activity"></i> إعادة التحليل الآن
+    <button id="analyzeBtn" class="primary-btn">
+      إعادة التحليل الآن
     </button>
+  </section>
 
-    <!-- تنبيه ذكي -->
-    <div id="alertBox" class="alert-box" style="display:none;"></div>
+  <!-- لوحة التحليل -->
+  <section class="panel">
+    <h2>نتائج التحليل</h2>
 
-    <!-- سجل النشاط -->
-    <div class="activity-log" id="activityLog"></div>
+    <div class="row"><span>Neutral</span><span id="neutral">-</span></div>
+    <div class="row"><span>Stress Score</span><span id="stress">-</span></div>
+    <div class="row"><span>Stress Level</span><span id="level">-</span></div>
+    <div class="row"><span>Dominant Emotion</span><span id="dominant">-</span></div>
+    <div class="row"><span>Gender</span><span id="gender">-</span></div>
 
-  </div>
+    <!-- شريط التوتر -->
+    <div class="stress-bar">
+      <div id="stressBar"></div>
+    </div>
 
-  <!-- سكربتات -->
-  <script src="camera.js"></script>
-  <script>feather.replace();</script>
+    <!-- تنبيه -->
+    <div id="alertBox" class="alert-box"></div>
+  </section>
+
+  <!-- سجل النشاط -->
+  <section class="panel">
+    <h2>سجل النشاط</h2>
+    <div id="activityLog" class="activity-log"></div>
+  </section>
+
+</main>
+
+<script src="camera.js" defer></script>
 </body>
 </html>

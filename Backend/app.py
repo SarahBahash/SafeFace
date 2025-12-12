@@ -7,10 +7,10 @@ import logging
 
 app = FastAPI()
 
-# السماح للفرونت إند بالدخول
+# CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],      # ممكن تخصصينها لاحقًا
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -23,35 +23,38 @@ logger = logging.getLogger(__name__)
 @app.post("/analyze")
 async def analyze_image(file: UploadFile = File(...)):
     try:
-        # تحويل الملف لصورة OpenCV
         contents = await file.read()
         nparr = np.frombuffer(contents, np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
         if img is None:
-            return {"status": "error", "message": "Invalid image data"}
+            return {"status": "error", "message": "Invalid image"}
 
-        # استدعاء DeepFace
+        # تحليل المشاعر + الجنس
         result = DeepFace.analyze(
             img,
-            actions=["emotion"],
+            actions=["emotion", "gender"],
             enforce_detection=False
         )
 
-        # أحياناً DeepFace يرجع list
         if isinstance(result, list):
             result = result[0]
 
         emotions_raw = result.get("emotion", {}) or {}
-        # نحول كل القيم إلى float Python عادي عشان ما يزعّل FastAPI
         emotions = {k: float(v) for k, v in emotions_raw.items()}
 
-        neutral = float(emotions.get("neutral", 0.0))
-        fear = float(emotions.get("fear", 0.0))
-        angry = float(emotions.get("angry", 0.0))
+        # إذا ما فيه وجه
+        if not emotions or sum(emotions.values()) == 0:
+            return {
+                "status": "no_face",
+                "message": "No face detected"
+            }
+
+        # حساب التوتر
+        fear = emotions.get("fear", 0)
+        angry = emotions.get("angry", 0)
         stress_score = fear + angry
 
-        # مستوى الخطورة
         if stress_score < 30:
             level = "low"
         elif stress_score < 60:
@@ -59,40 +62,34 @@ async def analyze_image(file: UploadFile = File(...)):
         else:
             level = "high"
 
-        # إحداثيات الوجه (region)
-        region_raw = result.get("region") or result.get("face_region") or {}
+        # تحديد الجنس
+        gender = result.get("dominant_gender", "unknown")
+
+        # إحداثيات الوجه
+        region_raw = result.get("region", {})
         region = None
-        if isinstance(region_raw, dict) and all(k in region_raw for k in ("x", "y", "w", "h")):
+        if isinstance(region_raw, dict):
             region = {
-                "x": int(region_raw["x"]),
-                "y": int(region_raw["y"]),
-                "w": int(region_raw["w"]),
-                "h": int(region_raw["h"]),
-            }
-
-        dominant = result.get("dominant_emotion", "unknown")
-
-        # حالة ما فيه وجه واضح
-        if region is None and sum(emotions.values()) == 0:
-            return {
-                "status": "no_face",
-                "message": "No face detected"
+                "x": int(region_raw.get("x", 0)),
+                "y": int(region_raw.get("y", 0)),
+                "w": int(region_raw.get("w", 0)),
+                "h": int(region_raw.get("h", 0)),
             }
 
         return {
             "status": "ok",
-            "neutral": round(neutral, 2),
+            "neutral": emotions.get("neutral", 0),
             "stress_score": round(stress_score, 2),
+            "dominant_emotion": result.get("dominant_emotion", "unknown"),
             "level": level,
-            "dominant_emotion": dominant,
+            "gender": gender,
             "details": {
-                "region": region,
-                "emotions": emotions
+                "region": region
             }
         }
 
     except Exception as e:
-        logger.exception(f"Error analyzing image: {e}")
+        logger.exception("Analysis error")
         return {
             "status": "error",
             "message": str(e)
